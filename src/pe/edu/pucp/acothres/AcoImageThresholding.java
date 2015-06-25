@@ -1,6 +1,9 @@
 package pe.edu.pucp.acothres;
 
 import isula.aco.AcoProblemSolver;
+import isula.aco.ConfigurationProvider;
+import isula.aco.algorithms.antsystem.PerformEvaporation;
+import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 
 import java.util.Date;
 
@@ -9,20 +12,26 @@ import pe.edu.pucp.acothres.ant.AntColony;
 import pe.edu.pucp.acothres.ant.Environment;
 import pe.edu.pucp.acothres.cluster.KmeansClassifier;
 import pe.edu.pucp.acothres.exper.TestSuite;
+import pe.edu.pucp.acothres.isula.ImageThresholdingAntColony;
+import pe.edu.pucp.acothres.isula.ImageThresholdingConfigurationProvider;
+import pe.edu.pucp.acothres.isula.ImageThresholdingEnvironment;
 
 public class AcoImageThresholding {
 
-  private Environment environment;
-  private AntColony antColony;
+  // private Environment environment;
+  //private AntColony antColony;
+  private AcoProblemSolver problemSolver;
 
   public AcoImageThresholding(Environment environment) {
-    this.environment = environment;
-    this.antColony = new AntColony(environment,
-        ProblemConfiguration.NUMBER_OF_STEPS);
+    // this.environment = environment;
+    /*this.antColony = new AntColony(environment,
+        ProblemConfiguration.NUMBER_OF_STEPS);*/
+
+    this.problemSolver = new AcoProblemSolver();
   }
 
   private void solveProblem() throws Exception {
-    this.environment.initializePheromoneMatrix();
+    // this.environment.initializePheromoneMatrix();
     int iteration = 0;
     System.out.println("STARTING ITERATIONS");
     System.out.println("Number of iterations: "
@@ -36,7 +45,7 @@ public class AcoImageThresholding {
       if (!ProblemConfiguration.DEPOSITE_PHEROMONE_ONLINE) {
         this.antColony.depositPheromone();
       }
-      this.environment.performEvaporation();
+      //this.environment.performEvaporation();
       iteration++;
     }
     System.out.println("EXECUTION FINISHED");
@@ -60,10 +69,33 @@ public class AcoImageThresholding {
     imageGraph = ImageFileHelper.removeBackgroundPixels(imageGraph);
 
     Environment environment = new Environment(imageGraph);
+
+    double[][] imageGraphDoubles = ImageFileHelper
+        .removeBackgroundPixelsReturningDouble(imageGraph);
+
+
     AcoImageThresholding acoImageSegmentation = new AcoImageThresholding(
         environment);
+    
+    ImageThresholdingConfigurationProvider configurationProvider = new ProblemConfiguration();
+    ImageThresholdingEnvironment isulaEnvironment = new ImageThresholdingEnvironment(
+        imageGraphDoubles);
+    ImageThresholdingAntColony isulaColony = new ImageThresholdingAntColony(configurationProvider);
+
+    // TODO(cgavidia): Seems these two are always required. They might be
+    // constructor parameters.
+    acoImageSegmentation.problemSolver
+        .setConfigurationProvider(configurationProvider);
+    acoImageSegmentation.problemSolver.setEnvironment(isulaEnvironment);
+    acoImageSegmentation.problemSolver.setAntColony(isulaColony);
+    
+    acoImageSegmentation.problemSolver
+        .addDaemonAction(new StartPheromoneMatrix());
+    acoImageSegmentation.problemSolver
+        .addDaemonAction(new PerformEvaporation());
+
     System.out.println("Starting computation at: " + new Date());
-    long startTime = System.nanoTime();
+    final long startTime = System.nanoTime();
 
     acoImageSegmentation.solveProblem();
 
