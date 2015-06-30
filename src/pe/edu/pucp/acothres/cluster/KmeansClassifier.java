@@ -7,7 +7,7 @@ import java.util.List;
 import pe.edu.pucp.acosthres.image.ImageFileHelper;
 import pe.edu.pucp.acosthres.image.ImagePixel;
 import pe.edu.pucp.acothres.ProblemConfiguration;
-import pe.edu.pucp.acothres.ant.Environment;
+import pe.edu.pucp.acothres.ant.LegacyEnvironment;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
@@ -23,12 +23,12 @@ public class KmeansClassifier {
 	private static final String PHEROMONE_VALUE_ATTRIBUTE = "pheromoneValue";
 
 	private int numberOfClusters;
-	private Environment environment;
+	private LegacyEnvironment environment;
 
 	private List<ImagePixel> pixelPositions = new ArrayList<ImagePixel>();
 	private double[] clusterAssignments;
 
-	public KmeansClassifier(Environment environment, int numberOfClusters) {
+	public KmeansClassifier(LegacyEnvironment environment, int numberOfClusters) {
 		this.environment = environment;
 		this.numberOfClusters = numberOfClusters;
 	}

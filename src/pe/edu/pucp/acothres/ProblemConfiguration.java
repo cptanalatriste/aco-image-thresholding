@@ -1,9 +1,8 @@
 package pe.edu.pucp.acothres;
 
-import pe.edu.pucp.acothres.isula.ImageThresholdingConfigurationProvider;
+import isula.aco.ConfigurationProvider;
 
-public class ProblemConfiguration implements
-    ImageThresholdingConfigurationProvider {
+public class ProblemConfiguration implements ConfigurationProvider {
 
   // Credits:
   // https://www.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300/html/dataset/images/gray/296059.html
@@ -78,12 +77,12 @@ public class ProblemConfiguration implements
   }
 
   public int getNumberOfAnts() {
-    // TODO Auto-generated method stub
     return 0;
   }
 
   public double getEvaporationRatio() {
-    return EVAPORATION;
+    // TODO Auto-generated method stub
+    return 0;
   }
 
   public int getNumberOfIterations() {
@@ -92,10 +91,7 @@ public class ProblemConfiguration implements
   }
 
   public double getInitialPheromoneValue() {
-    return INITIAL_PHEROMONE_VALUE;
-  }
-
-  public int getNumberOfSteps() {
-    return NUMBER_OF_STEPS;
+    // TODO Auto-generated method stub
+    return 0;
   }
 }
