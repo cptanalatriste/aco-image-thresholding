@@ -4,9 +4,9 @@ import isula.aco.ConfigurationProvider;
 import isula.aco.DaemonAction;
 import isula.aco.DaemonActionType;
 
-import java.util.Collections;
-
 import pe.edu.pucp.acosthres.image.ImagePixel;
+
+import java.util.Collections;
 
 public class RandomizeHive extends DaemonAction<ImagePixel> {
 

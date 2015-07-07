@@ -4,57 +4,25 @@ import isula.aco.AcoProblemSolver;
 import isula.aco.Ant;
 import isula.aco.AntColony;
 import isula.aco.ConfigurationProvider;
-import isula.aco.Environment;
+import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
+
+import pe.edu.pucp.acosthres.image.ImageFileHelper;
+import pe.edu.pucp.acosthres.image.ImagePixel;
+import pe.edu.pucp.acothres.cluster.KmeansClassifier;
+import pe.edu.pucp.acothres.exper.TestSuite;
+import pe.edu.pucp.acothres.isula.EnvironmentForImageThresholding;
+import pe.edu.pucp.acothres.isula.ImageThresholdingAntColony;
+import pe.edu.pucp.acothres.isula.OnlinePheromoneUpdateForThresholding;
+import pe.edu.pucp.acothres.isula.RandomizeHive;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import pe.edu.pucp.acosthres.image.ImageFileHelper;
-import pe.edu.pucp.acosthres.image.ImagePixel;
-import pe.edu.pucp.acothres.ant.LegacyAntColony;
-import pe.edu.pucp.acothres.ant.LegacyEnvironment;
-import pe.edu.pucp.acothres.cluster.KmeansClassifier;
-import pe.edu.pucp.acothres.exper.TestSuite;
-import pe.edu.pucp.acothres.isula.AntForImageThresholding;
-import pe.edu.pucp.acothres.isula.EnvironmentForImageThresholding;
-import pe.edu.pucp.acothres.isula.RandomizeHive;
-
 public class AcoImageThresholding {
-
-  private LegacyEnvironment environment;
-  private LegacyAntColony antColony;
-
-  public AcoImageThresholding(LegacyEnvironment environment) {
-    this.environment = environment;
-    this.antColony = new LegacyAntColony(environment,
-        ProblemConfiguration.NUMBER_OF_STEPS);
-  }
-
-  private void solveProblem() throws Exception {
-    this.environment.initializePheromoneMatrix();
-    int iteration = 0;
-    System.out.println("STARTING ITERATIONS");
-    System.out.println("Number of iterations: "
-        + ProblemConfiguration.MAX_ITERATIONS);
-    while (iteration < ProblemConfiguration.MAX_ITERATIONS) {
-      System.out.println("Current iteration: " + iteration);
-      this.antColony.clearAntSolutions();
-      this.antColony
-          .buildSolutions(ProblemConfiguration.DEPOSITE_PHEROMONE_ONLINE);
-      System.out.println("UPDATING PHEROMONE TRAILS");
-      if (!ProblemConfiguration.DEPOSITE_PHEROMONE_ONLINE) {
-        this.antColony.depositPheromone();
-      }
-      this.environment.performEvaporation();
-      iteration++;
-    }
-    System.out.println("EXECUTION FINISHED");
-    // TODO(cgavidia): We're not storing best tour or it's lenght
-  }
 
   public static int[][] getSegmentedImageAsArray(String imageFile,
       boolean generateOutputFiles) throws Exception {
@@ -65,15 +33,7 @@ public class AcoImageThresholding {
 
     int[][] imageGraph = getImageGraph(imageFile);
 
-    applySegmentationWithIsula(imageGraph);
-
-    LegacyEnvironment environment = new LegacyEnvironment(imageGraph);
-    AcoImageThresholding acoImageSegmentation = new AcoImageThresholding(
-        environment);
-    System.out.println("Starting computation at: " + new Date());
-    long startTime = System.nanoTime();
-
-    acoImageSegmentation.solveProblem();
+    EnvironmentForImageThresholding environment = applySegmentationWithIsula(imageGraph);
 
     System.out.println("Starting K-means clustering");
 
@@ -83,8 +43,7 @@ public class AcoImageThresholding {
     KmeansClassifier classifier = new KmeansClassifier(environment,
         ProblemConfiguration.NUMBER_OF_CLUSTERS);
 
-    int[][] segmentedImageAsMatrix = applyPostProcessingSteps(classifier,
-        startTime);
+    int[][] segmentedImageAsMatrix = applyPostProcessingSteps(classifier);
 
     if (generateOutputFiles) {
       System.out.println("Generating segmented image");
@@ -104,12 +63,12 @@ public class AcoImageThresholding {
 
   }
 
-  private static void applySegmentationWithIsula(final int[][] imageGraphAsInt)
-      throws InvalidInputException {
+  private static EnvironmentForImageThresholding applySegmentationWithIsula(
+      final int[][] imageGraphAsInt) throws InvalidInputException {
 
     // TODO(cgavidia): Simple hack to support the type. It should be a generic
     // instead.
-    double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
+    final double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
     for (int i = 0; i < imageGraphAsInt.length; i++) {
       for (int j = 0; i < imageGraphAsInt[0].length; i++) {
         imageGraph[i][j] = imageGraphAsInt[i][j];
@@ -121,44 +80,10 @@ public class AcoImageThresholding {
     ConfigurationProvider configurationProvider = new ProblemConfiguration();
     AcoProblemSolver<ImagePixel> problemSolver = new AcoProblemSolver<ImagePixel>();
 
-    // TODO(cgavidia): This number is meaningless. The number of ants is
-    // calculated later.
-    int numberOfAnts = -1;
+    EnvironmentForImageThresholding environment = new EnvironmentForImageThresholding(
+        imageGraph, ProblemConfiguration.NUMBER_OF_STEPS);
 
-    Environment environment = new EnvironmentForImageThresholding(imageGraph,
-        ProblemConfiguration.NUMBER_OF_STEPS);
-
-    AntColony<ImagePixel> antColony = new AntColony<ImagePixel>(numberOfAnts) {
-
-      @Override
-      public void buildColony(Environment environment) {
-        int antCounter = 0;
-        double[][] problemGraph = environment.getProblemGraph();
-
-        for (int i = 0; i < problemGraph.length; i++) {
-          for (int j = 0; i < problemGraph[0].length; i++) {
-
-            if (problemGraph[i][j] != ProblemConfiguration.ABSENT_PIXEL_FLAG) {
-              Ant<ImagePixel> ant = this.createAnt(environment);
-              ant.getSolution()[0] = new ImagePixel(i, j, imageGraphAsInt);
-              this.getHive().add(ant);
-
-              antCounter += 1;
-            }
-
-          }
-        }
-
-        this.setNumberOfAnts(antCounter);
-      }
-
-      @Override
-      protected Ant<ImagePixel> createAnt(Environment environment) {
-        EnvironmentForImageThresholding env = (EnvironmentForImageThresholding) environment;
-
-        return new AntForImageThresholding(env.getNumberOfSteps());
-      }
-    };
+    AntColony<ImagePixel> antColony = new ImageThresholdingAntColony();
 
     problemSolver.setConfigurationProvider(configurationProvider);
     problemSolver.setEnvironment(environment);
@@ -172,16 +97,18 @@ public class AcoImageThresholding {
 
     List<Ant<ImagePixel>> hive = problemSolver.getAntColony().getHive();
     for (Ant<ImagePixel> ant : hive) {
-      // TODO(cgavidia): Here goes the policy for the next node class.
-      ant.addPolicy(null);
+      ant.addPolicy(new PseudoRandomNodeSelection<ImagePixel>());
+      ant.addPolicy(new OnlinePheromoneUpdateForThresholding());
     }
 
     problemSolver.solveProblem();
 
+    return environment;
+
   }
 
-  private static int[][] applyPostProcessingSteps(KmeansClassifier classifier,
-      long startTime) throws Exception {
+  private static int[][] applyPostProcessingSteps(KmeansClassifier classifier)
+      throws Exception {
 
     int[][] segmentedImageAsMatrix = classifier.generateSegmentedImage();
 
@@ -196,11 +123,7 @@ public class AcoImageThresholding {
     ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
         ProblemConfiguration.OUTPUT_DIRECTORY + "with_open_process.bmp");
 
-    long endTime = System.nanoTime();
     System.out.println("Finishing computation at: " + new Date());
-    System.out.println("Duration (in seconds): "
-        + ((double) (endTime - startTime) / 1000000000.0));
-
     return segmentedImageAsMatrix;
   }
 

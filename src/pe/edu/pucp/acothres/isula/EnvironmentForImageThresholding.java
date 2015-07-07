@@ -1,9 +1,15 @@
 package pe.edu.pucp.acothres.isula;
 
+import java.util.logging.Logger;
+
+import isula.aco.AntColony;
 import isula.aco.Environment;
 import isula.aco.exception.InvalidInputException;
 
 public class EnvironmentForImageThresholding extends Environment {
+
+  private static Logger logger = Logger
+      .getLogger(EnvironmentForImageThresholding.class.getName());
 
   private int numberOfSteps;
 
@@ -21,6 +27,46 @@ public class EnvironmentForImageThresholding extends Environment {
 
   public int getNumberOfSteps() {
     return numberOfSteps;
+  }
+
+  public int getNumberOfRows() {
+    return getProblemGraph().length;
+  }
+
+  public int getNumberOfColumns() {
+    return getProblemGraph()[0].length;
+  }
+
+  public int[][] getNormalizedPheromoneMatrix(int expectedMaximum) {
+    logger.info("Normalizing pheromone matrix");
+
+    int numberOfRows = this.getNumberOfRows();
+    int numberOfColumns = this.getNumberOfColumns();
+    int[][] normalizedPheromoneMatrix = new int[numberOfRows][numberOfColumns];
+    double[][] pheromoneTrails = this.getPheromoneMatrix();
+
+    double currentMin = pheromoneTrails[0][0];
+    double currentMax = pheromoneTrails[0][0];
+    for (int i = 0; i < numberOfRows; i++) {
+      for (int j = 0; j < numberOfColumns; j++) {
+        if (pheromoneTrails[i][j] < currentMin) {
+          currentMin = pheromoneTrails[i][j];
+        } else if (pheromoneTrails[i][j] > currentMax) {
+          currentMax = pheromoneTrails[i][j];
+        }
+      }
+    }
+
+    logger.info("currentMin: " + currentMin);
+    logger.info("currentMax: " + currentMax);
+
+    for (int i = 0; i < numberOfRows; i++) {
+      for (int j = 0; j < numberOfColumns; j++) {
+        normalizedPheromoneMatrix[i][j] = (int) ((pheromoneTrails[i][j] - currentMin)
+            * expectedMaximum / (currentMax - currentMin));
+      }
+    }
+    return normalizedPheromoneMatrix;
   }
 
 }
