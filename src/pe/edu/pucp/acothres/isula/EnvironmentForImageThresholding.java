@@ -1,10 +1,9 @@
 package pe.edu.pucp.acothres.isula;
 
-import java.util.logging.Logger;
-
-import isula.aco.AntColony;
 import isula.aco.Environment;
 import isula.aco.exception.InvalidInputException;
+
+import java.util.logging.Logger;
 
 public class EnvironmentForImageThresholding extends Environment {
 
