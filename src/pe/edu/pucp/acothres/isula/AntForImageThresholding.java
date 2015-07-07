@@ -5,6 +5,7 @@ import java.util.List;
 import isula.aco.Ant;
 import isula.aco.Environment;
 import pe.edu.pucp.acosthres.image.ImagePixel;
+import pe.edu.pucp.acothres.ProblemConfiguration;
 
 public class AntForImageThresholding extends Ant<ImagePixel> {
 
@@ -22,7 +23,7 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
   public Double getPheromoneTrailValue(ImagePixel solutionComponent,
       Integer positionInSolution, Environment environment) {
     // TODO Auto-generated method stub
-    return null;
+    return 0.0;
   }
 
   @Override
@@ -42,6 +43,13 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
   public boolean isSolutionReady(Environment env) {
     EnvironmentForImageThresholding environment = (EnvironmentForImageThresholding) env;
     return getCurrentIndex() == environment.getNumberOfSteps();
+  }
+
+  @Override
+  public Double getHeuristicValue(ImagePixel solutionComponent,
+      Integer positionInSolution, Environment environment) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
