@@ -15,6 +15,11 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
   }
 
   @Override
+  public boolean isNodeValid(ImagePixel imagePixel) {
+    return imagePixel.getGreyScaleValue() != ProblemConfiguration.ABSENT_PIXEL_FLAG;
+  }
+
+  @Override
   public List<ImagePixel> getNeighbourhood(Environment environment) {
     ImagePixel currentPosition = this.getSolution()[this.getCurrentIndex() - 1];
     return currentPosition.getNeighbourhood(environment.getProblemGraph());
@@ -49,7 +54,7 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
   @Override
   public double getSolutionQuality(Environment environment) {
     double grayScaleSum = 0.0;
-    for (int i = 0; i < getSolution().length; i++) {
+    for (int i = 0; i < this.getCurrentIndex(); i++) {
       ImagePixel currentPixel = getSolution()[i];
       grayScaleSum = grayScaleSum + currentPixel.getGreyScaleValue();
     }

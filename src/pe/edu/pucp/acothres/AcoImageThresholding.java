@@ -2,19 +2,17 @@ package pe.edu.pucp.acothres;
 
 import isula.aco.AcoProblemSolver;
 import isula.aco.Ant;
-import isula.aco.AntColony;
 import isula.aco.ConfigurationProvider;
-import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
-
 import pe.edu.pucp.acosthres.image.ImageFileHelper;
 import pe.edu.pucp.acosthres.image.ImagePixel;
 import pe.edu.pucp.acothres.cluster.KmeansClassifier;
 import pe.edu.pucp.acothres.exper.TestSuite;
 import pe.edu.pucp.acothres.isula.EnvironmentForImageThresholding;
 import pe.edu.pucp.acothres.isula.ImageThresholdingAntColony;
+import pe.edu.pucp.acothres.isula.NodeSelectionForImageThresholding;
 import pe.edu.pucp.acothres.isula.OnlinePheromoneUpdateForThresholding;
 import pe.edu.pucp.acothres.isula.RandomizeHive;
 
@@ -22,8 +20,39 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.naming.ConfigurationException;
+
 public class AcoImageThresholding {
 
+  /**
+   * Starts the Image Thresholding process.
+   * 
+   * @param args
+   *          Program arguments.
+   */
+  public static void main(String[] args) {
+    try {
+      String imageFile = ProblemConfiguration.INPUT_DIRECTORY
+          + ProblemConfiguration.IMAGE_FILE;
+      AcoImageThresholding.getSegmentedImageAsArray(imageFile, true);
+      new TestSuite().executeReport();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  /**
+   * Returns an image in segments, represented as an array of Integers.
+   * 
+   * @param imageFile
+   *          Image file location.
+   * @param generateOutputFiles
+   *          True to generate output files.
+   * @return Segmented image as an array.
+   * @throws Exception
+   *           IOException migh be thrown.
+   */
   public static int[][] getSegmentedImageAsArray(String imageFile,
       boolean generateOutputFiles) throws Exception {
     System.out.println("ACO FOR IMAGE THRESHOLDING");
@@ -64,13 +93,14 @@ public class AcoImageThresholding {
   }
 
   private static EnvironmentForImageThresholding applySegmentationWithIsula(
-      final int[][] imageGraphAsInt) throws InvalidInputException {
+      final int[][] imageGraphAsInt) throws InvalidInputException,
+      ConfigurationException {
 
     // TODO(cgavidia): Simple hack to support the type. It should be a generic
     // instead.
-    final double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
+    double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
     for (int i = 0; i < imageGraphAsInt.length; i++) {
-      for (int j = 0; i < imageGraphAsInt[0].length; i++) {
+      for (int j = 0; j < imageGraphAsInt[0].length; j++) {
         imageGraph[i][j] = imageGraphAsInt[i][j];
       }
     }
@@ -83,7 +113,8 @@ public class AcoImageThresholding {
     EnvironmentForImageThresholding environment = new EnvironmentForImageThresholding(
         imageGraph, ProblemConfiguration.NUMBER_OF_STEPS);
 
-    AntColony<ImagePixel> antColony = new ImageThresholdingAntColony();
+    ImageThresholdingAntColony antColony = new ImageThresholdingAntColony();
+    antColony.buildColony(environment);
 
     problemSolver.setConfigurationProvider(configurationProvider);
     problemSolver.setEnvironment(environment);
@@ -97,7 +128,7 @@ public class AcoImageThresholding {
 
     List<Ant<ImagePixel>> hive = problemSolver.getAntColony().getHive();
     for (Ant<ImagePixel> ant : hive) {
-      ant.addPolicy(new PseudoRandomNodeSelection<ImagePixel>());
+      ant.addPolicy(new NodeSelectionForImageThresholding());
       ant.addPolicy(new OnlinePheromoneUpdateForThresholding());
     }
 
@@ -137,21 +168,6 @@ public class AcoImageThresholding {
     System.out.println("Starting background filtering process");
     imageGraph = ImageFileHelper.removeBackgroundPixels(imageGraph);
     return imageGraph;
-  }
-
-  /**
-   * @param args
-   */
-  public static void main(String[] args) {
-    try {
-      String imageFile = ProblemConfiguration.INPUT_DIRECTORY
-          + ProblemConfiguration.IMAGE_FILE;
-      AcoImageThresholding.getSegmentedImageAsArray(imageFile, true);
-      new TestSuite().executeReport();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
   }
 
 }

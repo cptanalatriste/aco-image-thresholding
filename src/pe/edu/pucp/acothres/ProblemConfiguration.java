@@ -1,8 +1,10 @@
 package pe.edu.pucp.acothres;
 
 import isula.aco.ConfigurationProvider;
+import isula.aco.algorithms.acs.AcsConfigurationProvider;
 
-public class ProblemConfiguration implements ConfigurationProvider {
+public class ProblemConfiguration implements ConfigurationProvider,
+    AcsConfigurationProvider {
 
   // Credits:
   // https://www.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300/html/dataset/images/gray/296059.html
@@ -77,21 +79,31 @@ public class ProblemConfiguration implements ConfigurationProvider {
   }
 
   public int getNumberOfAnts() {
+    // This value is calculated at runtime.
     return 0;
   }
 
   public double getEvaporationRatio() {
-    // TODO Auto-generated method stub
-    return 0;
+    return EVAPORATION;
   }
 
   public int getNumberOfIterations() {
-    // TODO Auto-generated method stub
-    return 0;
+    return MAX_ITERATIONS;
   }
 
   public double getInitialPheromoneValue() {
-    // TODO Auto-generated method stub
-    return 0;
+    return INITIAL_PHEROMONE_VALUE;
+  }
+
+  public double getBestChoiceProbability() {
+    return BEST_CHOICE_PROBABILITY;
+  }
+
+  public double getHeuristicImportance() {
+    return HEURISTIC_IMPORTANCE;
+  }
+
+  public double getPheromoneImportance() {
+    return PHEROMONE_IMPORTANCE;
   }
 }

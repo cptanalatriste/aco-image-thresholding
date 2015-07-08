@@ -25,7 +25,7 @@ public class ImageThresholdingAntColony extends AntColony<ImagePixel> {
     double[][] problemGraph = environment.getProblemGraph();
 
     for (int i = 0; i < problemGraph.length; i++) {
-      for (int j = 0; i < problemGraph[0].length; i++) {
+      for (int j = 0; j < problemGraph[0].length; j++) {
 
         if (problemGraph[i][j] != ProblemConfiguration.ABSENT_PIXEL_FLAG) {
           Ant<ImagePixel> ant = this.createAnt(environment);
