@@ -4,8 +4,8 @@ import isula.aco.Ant;
 import isula.aco.AntColony;
 import isula.aco.Environment;
 
+import pe.edu.pucp.acosthres.image.ImageFileHelper;
 import pe.edu.pucp.acosthres.image.ImagePixel;
-import pe.edu.pucp.acothres.ProblemConfiguration;
 
 import java.util.logging.Logger;
 
@@ -27,7 +27,7 @@ public class ImageThresholdingAntColony extends AntColony<ImagePixel> {
     for (int i = 0; i < problemGraph.length; i++) {
       for (int j = 0; j < problemGraph[0].length; j++) {
 
-        if (problemGraph[i][j] != ProblemConfiguration.ABSENT_PIXEL_FLAG) {
+        if (problemGraph[i][j] != ImageFileHelper.ABSENT_PIXEL_FLAG) {
           Ant<ImagePixel> ant = this.createAnt(environment);
           ant.getSolution()[0] = new ImagePixel(i, j,
               environment.getProblemGraph());

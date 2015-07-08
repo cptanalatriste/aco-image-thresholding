@@ -6,6 +6,7 @@ import isula.aco.ConfigurationProvider;
 import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
+
 import pe.edu.pucp.acosthres.image.ImageFileHelper;
 import pe.edu.pucp.acosthres.image.ImagePixel;
 import pe.edu.pucp.acothres.cluster.KmeansClassifier;
@@ -17,12 +18,16 @@ import pe.edu.pucp.acothres.isula.OnlinePheromoneUpdateForThresholding;
 import pe.edu.pucp.acothres.isula.RandomizeHive;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.naming.ConfigurationException;
 
+
 public class AcoImageThresholding {
+
+  private static Logger logger = Logger.getLogger(AcoImageThresholding.class
+      .getName());
 
   /**
    * Starts the Image Thresholding process.
@@ -55,32 +60,29 @@ public class AcoImageThresholding {
    */
   public static int[][] getSegmentedImageAsArray(String imageFile,
       boolean generateOutputFiles) throws Exception {
-    System.out.println("ACO FOR IMAGE THRESHOLDING");
-    System.out.println("=============================");
+    logger.info("ACO FOR IMAGE THRESHOLDING");
+    logger.info("=============================");
 
-    System.out.println("Data file: " + imageFile);
+    logger.info("Data file: " + imageFile);
 
-    int[][] imageGraph = getImageGraph(imageFile);
+    double[][] imageGraph = getImageGraph(imageFile);
 
     EnvironmentForImageThresholding environment = applySegmentationWithIsula(imageGraph);
 
-    System.out.println("Starting K-means clustering");
+    logger.info("Starting K-means clustering");
 
-    // TODO(cgavidia): There should a method to get the number of
-    // clústers automatically. Also, son preprocessing or postprocessing
-    // would improve quality.
     KmeansClassifier classifier = new KmeansClassifier(environment,
         ProblemConfiguration.NUMBER_OF_CLUSTERS);
 
     int[][] segmentedImageAsMatrix = applyPostProcessingSteps(classifier);
 
     if (generateOutputFiles) {
-      System.out.println("Generating segmented image");
+      logger.info("Generating segmented image");
       ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
           ProblemConfiguration.OUTPUT_DIRECTORY
               + ProblemConfiguration.OUTPUT_IMAGE_FILE);
 
-      System.out.println("Generating images per cluster");
+      logger.info("Generating images per cluster");
       for (int i = 0; i < classifier.getNumberOfClusters(); i++) {
         ImageFileHelper.generateImageFromArray(
             classifier.generateSegmentedImagePerCluster(i),
@@ -93,17 +95,8 @@ public class AcoImageThresholding {
   }
 
   private static EnvironmentForImageThresholding applySegmentationWithIsula(
-      final int[][] imageGraphAsInt) throws InvalidInputException,
+      double[][] imageGraph) throws InvalidInputException,
       ConfigurationException {
-
-    // TODO(cgavidia): Simple hack to support the type. It should be a generic
-    // instead.
-    double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
-    for (int i = 0; i < imageGraphAsInt.length; i++) {
-      for (int j = 0; j < imageGraphAsInt[0].length; j++) {
-        imageGraph[i][j] = imageGraphAsInt[i][j];
-      }
-    }
 
     // TODO(cgavidia): We need to find a way to force to implement this types.
     // Maybe as constructor arguments.
@@ -123,8 +116,6 @@ public class AcoImageThresholding {
     problemSolver.addDaemonAction(new StartPheromoneMatrix<ImagePixel>());
     problemSolver.addDaemonAction(new RandomizeHive());
     problemSolver.addDaemonAction(new PerformEvaporation<ImagePixel>());
-    // TODO(cgavidia): The normalization of the pheromone on the Matrix is still
-    // pending.
 
     List<Ant<ImagePixel>> hive = problemSolver.getAntColony().getHive();
     for (Ant<ImagePixel> ant : hive) {
@@ -133,9 +124,7 @@ public class AcoImageThresholding {
     }
 
     problemSolver.solveProblem();
-
     return environment;
-
   }
 
   private static int[][] applyPostProcessingSteps(KmeansClassifier classifier)
@@ -154,19 +143,28 @@ public class AcoImageThresholding {
     ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
         ProblemConfiguration.OUTPUT_DIRECTORY + "with_open_process.bmp");
 
-    System.out.println("Finishing computation at: " + new Date());
     return segmentedImageAsMatrix;
   }
 
-  private static int[][] getImageGraph(String imageFile) throws IOException {
-    int[][] imageGraph = ImageFileHelper.getImageArrayFromFile(imageFile);
+  private static double[][] getImageGraph(String imageFile) throws IOException {
+    int[][] imageGraphAsInt = ImageFileHelper.getImageArrayFromFile(imageFile);
 
-    System.out.println("Generating original image from matrix");
-    ImageFileHelper.generateImageFromArray(imageGraph,
+    logger.info("Generating original image from matrix");
+    ImageFileHelper.generateImageFromArray(imageGraphAsInt,
         ProblemConfiguration.OUTPUT_DIRECTORY
             + ProblemConfiguration.ORIGINAL_IMAGE_FILE);
-    System.out.println("Starting background filtering process");
-    imageGraph = ImageFileHelper.removeBackgroundPixels(imageGraph);
+    logger.info("Starting background filtering process");
+    imageGraphAsInt = ImageFileHelper.removeBackgroundPixels(imageGraphAsInt);
+
+    // TODO(cgavidia): Simple hack to support the type. It should be a generic
+    // instead.
+    double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
+    for (int i = 0; i < imageGraphAsInt.length; i++) {
+      for (int j = 0; j < imageGraphAsInt[0].length; j++) {
+        imageGraph[i][j] = imageGraphAsInt[i][j];
+      }
+    }
+
     return imageGraph;
   }
 

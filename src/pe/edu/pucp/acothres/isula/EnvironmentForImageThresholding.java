@@ -36,6 +36,13 @@ public class EnvironmentForImageThresholding extends Environment {
     return getProblemGraph()[0].length;
   }
 
+  /**
+   * Normalizes the pheromone matrix.
+   * 
+   * @param expectedMaximum
+   *          Expected maximum.
+   * @return Normalized matrix.
+   */
   public int[][] getNormalizedPheromoneMatrix(int expectedMaximum) {
     logger.info("Normalizing pheromone matrix");
 

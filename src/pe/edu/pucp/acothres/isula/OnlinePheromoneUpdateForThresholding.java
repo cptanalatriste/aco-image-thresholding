@@ -15,7 +15,9 @@ public class OnlinePheromoneUpdateForThresholding extends
 
     AntForImageThresholding ant = (AntForImageThresholding) getAnt();
 
-    double contribution = 1 / (ProblemConfiguration.COST_FUNCTION_PARAMETER_A + ProblemConfiguration.COST_FUNCTION_PARAMETER_B
+    double contribution = 1 
+        / (ProblemConfiguration.COST_FUNCTION_PARAMETER_A 
+            + ProblemConfiguration.COST_FUNCTION_PARAMETER_B
         * ant.getSolutionQuality(environment));
 
     double newValue = ant.getPheromoneTrailValue(solutionComponent,

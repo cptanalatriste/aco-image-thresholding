@@ -3,12 +3,16 @@ package pe.edu.pucp.acothres.isula;
 import isula.aco.Ant;
 import isula.aco.Environment;
 
+import pe.edu.pucp.acosthres.image.ImageFileHelper;
 import pe.edu.pucp.acosthres.image.ImagePixel;
-import pe.edu.pucp.acothres.ProblemConfiguration;
 
 import java.util.List;
 
+
+
 public class AntForImageThresholding extends Ant<ImagePixel> {
+
+  private static final double DELTA = Float.MIN_VALUE;
 
   public AntForImageThresholding(int solutionLenght) {
     this.setSolution(new ImagePixel[solutionLenght]);
@@ -16,7 +20,7 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
 
   @Override
   public boolean isNodeValid(ImagePixel imagePixel) {
-    return imagePixel.getGreyScaleValue() != ProblemConfiguration.ABSENT_PIXEL_FLAG;
+    return imagePixel.getGreyScaleValue() != ImageFileHelper.ABSENT_PIXEL_FLAG;
   }
 
   @Override
@@ -29,7 +33,7 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
   public Double getHeuristicValue(ImagePixel solutionComponent,
       Integer positionInSolution, Environment environment) {
     double heuristicValue = 1 / Math.abs(solutionComponent.getGreyScaleValue()
-        - getSolutionQuality(environment) + ProblemConfiguration.DELTA);
+        - getSolutionQuality(environment) + DELTA);
     return heuristicValue;
   }
 
@@ -38,8 +42,7 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
       Integer positionInSolution, Environment environment) {
     double[][] pheromoneTrails = environment.getPheromoneMatrix();
     double pheromoneTrailValue = pheromoneTrails[solutionComponent
-        .getxCoordinate()][solutionComponent.getyCoordinate()]
-        + ProblemConfiguration.DELTA;
+        .getxCoordinate()][solutionComponent.getyCoordinate()] + DELTA;
     return pheromoneTrailValue;
   }
 
