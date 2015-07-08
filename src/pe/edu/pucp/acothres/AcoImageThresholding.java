@@ -10,7 +10,6 @@ import isula.aco.exception.InvalidInputException;
 import pe.edu.pucp.acosthres.image.ImageFileHelper;
 import pe.edu.pucp.acosthres.image.ImagePixel;
 import pe.edu.pucp.acothres.cluster.KmeansClassifier;
-import pe.edu.pucp.acothres.exper.TestSuite;
 import pe.edu.pucp.acothres.isula.EnvironmentForImageThresholding;
 import pe.edu.pucp.acothres.isula.ImageThresholdingAntColony;
 import pe.edu.pucp.acothres.isula.NodeSelectionForImageThresholding;
@@ -40,11 +39,9 @@ public class AcoImageThresholding {
       String imageFile = ProblemConfiguration.INPUT_DIRECTORY
           + ProblemConfiguration.IMAGE_FILE;
       AcoImageThresholding.getSegmentedImageAsArray(imageFile, true);
-      new TestSuite().executeReport();
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 
   /**

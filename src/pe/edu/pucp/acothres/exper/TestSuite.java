@@ -60,7 +60,7 @@ public class TestSuite {
     System.out.println(ProblemConfiguration.currentConfigurationAsString());
     for (ImageComparator comparator : comparisonList) {
       comparator.executeComparison();
-      System.out.println(comparator.resultAsString());
+      logger.info(comparator.resultAsString());
     }
 
   }
