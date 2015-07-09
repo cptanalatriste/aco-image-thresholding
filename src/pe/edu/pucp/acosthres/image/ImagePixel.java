@@ -5,9 +5,11 @@ import java.util.List;
 
 public class ImagePixel {
 
-  private int coordinateForX;
-  private int coordinateForY;
-  private int greyScaleValue;
+  public static final int INITIAL_VALUE = -1;
+
+  private int coordinateForX = INITIAL_VALUE;
+  private int coordinateForY = INITIAL_VALUE;
+  private int greyScaleValue = INITIAL_VALUE;
 
   /**
    * Creates a new Pixel of a specified image.
@@ -120,7 +122,7 @@ public class ImagePixel {
       return false;
     }
 
-    final ImagePixel visitedPixel = (ImagePixel) obj;
+    ImagePixel visitedPixel = (ImagePixel) obj;
 
     if (visitedPixel.getxCoordinate() == this.getxCoordinate()
         && visitedPixel.getyCoordinate() == this.getyCoordinate()
