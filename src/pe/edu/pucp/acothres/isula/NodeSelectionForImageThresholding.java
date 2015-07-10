@@ -3,8 +3,7 @@ package pe.edu.pucp.acothres.isula;
 import isula.aco.Environment;
 import isula.aco.algorithms.acs.AcsConfigurationProvider;
 import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
-
-import pe.edu.pucp.acosthres.image.ImagePixel;
+import isula.image.util.ImagePixel;
 
 import java.util.HashMap;
 import java.util.List;

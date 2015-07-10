@@ -1,6 +1,7 @@
 package pe.edu.pucp.acosthres.image;
 
 import static org.junit.Assert.*;
+import isula.image.util.ImageFileHelper;
 
 import org.junit.Test;
 

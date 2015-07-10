@@ -3,9 +3,8 @@ package pe.edu.pucp.acothres.isula;
 import isula.aco.Ant;
 import isula.aco.AntColony;
 import isula.aco.Environment;
-
-import pe.edu.pucp.acosthres.image.ImageFileHelper;
-import pe.edu.pucp.acosthres.image.ImagePixel;
+import isula.image.util.ImageFileHelper;
+import isula.image.util.ImagePixel;
 
 import java.util.logging.Logger;
 

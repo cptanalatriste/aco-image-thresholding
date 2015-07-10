@@ -1,5 +1,6 @@
 package pe.edu.pucp.acothres.exper;
 
+import isula.image.util.ImageComparator;
 import pe.edu.pucp.acothres.ProblemConfiguration;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.logging.Logger;
 public class TestSuite {
 
   private static Logger logger = Logger.getLogger(TestSuite.class.getName());
-
+  private static final int GREYSCALE_POSITIVE_THRESHOLD = 20;
   private List<ImageComparator> comparisonList = new ArrayList<ImageComparator>();
 
   /**
@@ -17,13 +18,14 @@ public class TestSuite {
    */
   public TestSuite() {
     comparisonList.add(new ImageComparator("CSF",
-        ProblemConfiguration.INPUT_DIRECTORY + "csf_21130transverse1_64.gif"));
+        ProblemConfiguration.INPUT_DIRECTORY + "csf_21130transverse1_64.gif",
+        GREYSCALE_POSITIVE_THRESHOLD));
     comparisonList.add(new ImageComparator("Grey Matter",
-        ProblemConfiguration.INPUT_DIRECTORY + "grey_20342transverse1_64.gif"));
-    comparisonList
-        .add(new ImageComparator("White Matter",
-            ProblemConfiguration.INPUT_DIRECTORY
-                + "white_20358transverse1_64.gif"));
+        ProblemConfiguration.INPUT_DIRECTORY + "grey_20342transverse1_64.gif",
+        GREYSCALE_POSITIVE_THRESHOLD));
+    comparisonList.add(new ImageComparator("White Matter",
+        ProblemConfiguration.INPUT_DIRECTORY + "white_20358transverse1_64.gif",
+        GREYSCALE_POSITIVE_THRESHOLD));
   }
 
   /**

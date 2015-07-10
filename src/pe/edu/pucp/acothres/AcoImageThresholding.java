@@ -6,9 +6,8 @@ import isula.aco.ConfigurationProvider;
 import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
-
-import pe.edu.pucp.acosthres.image.ImageFileHelper;
-import pe.edu.pucp.acosthres.image.ImagePixel;
+import isula.image.util.ImageFileHelper;
+import isula.image.util.ImagePixel;
 import pe.edu.pucp.acothres.cluster.KmeansClassifier;
 import pe.edu.pucp.acothres.isula.EnvironmentForImageThresholding;
 import pe.edu.pucp.acothres.isula.ImageThresholdingAntColony;

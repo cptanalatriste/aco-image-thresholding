@@ -3,7 +3,7 @@ package pe.edu.pucp.acothres.isula;
 import isula.aco.ConfigurationProvider;
 import isula.aco.Environment;
 import isula.aco.algorithms.antsystem.OnlinePheromoneUpdate;
-import pe.edu.pucp.acosthres.image.ImagePixel;
+import isula.image.util.ImagePixel;
 import pe.edu.pucp.acothres.ProblemConfiguration;
 
 public class OnlinePheromoneUpdateForThresholding extends

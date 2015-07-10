@@ -1,9 +1,8 @@
 package pe.edu.pucp.acothres.cluster;
 
 import isula.aco.AcoProblemSolver;
-
-import pe.edu.pucp.acosthres.image.ImageFileHelper;
-import pe.edu.pucp.acosthres.image.ImagePixel;
+import isula.image.util.ImageFileHelper;
+import isula.image.util.ImagePixel;
 import pe.edu.pucp.acothres.ProblemConfiguration;
 import pe.edu.pucp.acothres.isula.EnvironmentForImageThresholding;
 import weka.clusterers.ClusterEvaluation;
