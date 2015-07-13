@@ -1,13 +1,13 @@
 package pe.edu.pucp.acothres;
 
 import isula.aco.AcoProblemSolver;
-import isula.aco.Ant;
 import isula.aco.ConfigurationProvider;
 import isula.aco.algorithms.antsystem.PerformEvaporation;
 import isula.aco.algorithms.antsystem.StartPheromoneMatrix;
 import isula.aco.exception.InvalidInputException;
 import isula.image.util.ImageFileHelper;
 import isula.image.util.ImagePixel;
+
 import pe.edu.pucp.acothres.cluster.KmeansClassifier;
 import pe.edu.pucp.acothres.isula.EnvironmentForImageThresholding;
 import pe.edu.pucp.acothres.isula.ImageThresholdingAntColony;
@@ -16,11 +16,9 @@ import pe.edu.pucp.acothres.isula.OnlinePheromoneUpdateForThresholding;
 import pe.edu.pucp.acothres.isula.RandomizeHive;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.naming.ConfigurationException;
-
 
 public class AcoImageThresholding {
 
@@ -57,8 +55,6 @@ public class AcoImageThresholding {
   public static int[][] getSegmentedImageAsArray(String imageFile,
       boolean generateOutputFiles) throws Exception {
     logger.info("ACO FOR IMAGE THRESHOLDING");
-    logger.info("=============================");
-
     logger.info("Data file: " + imageFile);
 
     double[][] imageGraph = getImageGraph(imageFile);
@@ -90,6 +86,7 @@ public class AcoImageThresholding {
 
   }
 
+  @SuppressWarnings("unchecked")
   private static EnvironmentForImageThresholding applySegmentationWithIsula(
       double[][] imageGraph) throws InvalidInputException,
       ConfigurationException {
@@ -109,15 +106,10 @@ public class AcoImageThresholding {
     problemSolver.setEnvironment(environment);
     problemSolver.setAntColony(antColony);
 
-    problemSolver.addDaemonAction(new StartPheromoneMatrix<ImagePixel>());
-    problemSolver.addDaemonAction(new RandomizeHive());
-    problemSolver.addDaemonAction(new PerformEvaporation<ImagePixel>());
-
-    List<Ant<ImagePixel>> hive = problemSolver.getAntColony().getHive();
-    for (Ant<ImagePixel> ant : hive) {
-      ant.addPolicy(new NodeSelectionForImageThresholding());
-      ant.addPolicy(new OnlinePheromoneUpdateForThresholding());
-    }
+    problemSolver.addDaemonActions(new StartPheromoneMatrix<ImagePixel>(),
+        new RandomizeHive(), new PerformEvaporation<ImagePixel>());
+    antColony.addAntPolicies(new NodeSelectionForImageThresholding(),
+        new OnlinePheromoneUpdateForThresholding());
 
     problemSolver.solveProblem();
     return environment;

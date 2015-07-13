@@ -59,7 +59,7 @@ public class TestSuite {
       comparator.setImageToValidateFile(maximumBdpClusterFile);
     }
 
-    System.out.println(ProblemConfiguration.currentConfigurationAsString());
+    logger.info(ProblemConfiguration.currentConfigurationAsString());
     for (ImageComparator comparator : comparisonList) {
       comparator.executeComparison();
       logger.info(comparator.resultAsString());

@@ -7,8 +7,6 @@ import isula.image.util.ImagePixel;
 
 import java.util.List;
 
-
-
 public class AntForImageThresholding extends Ant<ImagePixel> {
 
   private static final double DELTA = Float.MIN_VALUE;
@@ -66,7 +64,9 @@ public class AntForImageThresholding extends Ant<ImagePixel> {
   @Override
   public boolean isSolutionReady(Environment env) {
     EnvironmentForImageThresholding environment = (EnvironmentForImageThresholding) env;
-    return getCurrentIndex() == environment.getNumberOfSteps();
+    int currentIndex = getCurrentIndex();
+
+    return currentIndex == environment.getNumberOfSteps();
   }
 
 }
