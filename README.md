@@ -2,7 +2,7 @@
 A Java Program that applies a binary thresholding procedure to a MR Brain image. The proposed procedure includes simple thresholding to remove the background, an Ant Colony Algorithm to separate foreground from background and mathematical morphology to improve the produced segments.
 
 The Ant-Colony Algorithm
-========================
+------------------------
 The Ant Colony algorithm contained in the procedure is Ant System, as was proposed by Alice R. Malisia in the paper "Applying ant colony optimization to binary thresholding". To implement it, we used the Isula Framework:
 
 
@@ -34,3 +34,19 @@ The implemented process has the following characteristics:
 * At the beginning of each iteration we randomize the position of the ants in the Colony. This is accomplished by a Daemon Action provided by the Framework.
 * The node selection procedure is the Pseudo-Random policy proposed in Ant Colony System. We extend the original daemon action and add some problem-dependent logic.
 * Being an Ant System algorithm, the update of the pheromone is made online, after an ant builds a solution. We use the Ant Policy provided by the framework.
+
+The results 
+-----------
+We use an MR Brain image as an input. This was provided by the BrainWeb Database: http://brainweb.bic.mni.mcgill.ca/brainweb/
+
+![Original Image](https://raw.githubusercontent.com/cptanalatriste/aco-image-thresholding/master/inputImg/19952transverse2_64.gif)
+
+The program identified this areas as corresponding to the skull and fat (grey) and the cerebrum (white):
+
+![Segments](https://raw.githubusercontent.com/cptanalatriste/aco-image-thresholding/master/outputImg/with_open_process.bmp)
+
+More about Isula
+----------------
+Visit the Isula Framework site: http://cptanalatriste.github.io/isula/
+
+Review the Isula JavaDoc: http://cptanalatriste.github.io/isula/doc/
