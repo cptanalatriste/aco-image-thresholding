@@ -1,17 +1,17 @@
 package pe.edu.pucp.acothres.isula;
 
 import isula.aco.ConfigurationProvider;
-import isula.aco.Environment;
 import isula.aco.algorithms.antsystem.OnlinePheromoneUpdate;
 import isula.image.util.ImagePixel;
 import pe.edu.pucp.acothres.ProblemConfiguration;
 
 public class OnlinePheromoneUpdateForThresholding extends
-    OnlinePheromoneUpdate<ImagePixel> {
+    OnlinePheromoneUpdate<ImagePixel, EnvironmentForImageThresholding> {
 
   @Override
   protected double getNewPheromoneValue(ImagePixel solutionComponent,
-      Environment environment, ConfigurationProvider configurationProvider) {
+      EnvironmentForImageThresholding environment,
+      ConfigurationProvider configurationProvider) {
 
     AntForImageThresholding ant = (AntForImageThresholding) getAnt();
 

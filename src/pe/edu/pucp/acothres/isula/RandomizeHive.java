@@ -7,7 +7,8 @@ import isula.image.util.ImagePixel;
 
 import java.util.Collections;
 
-public class RandomizeHive extends DaemonAction<ImagePixel> {
+public class RandomizeHive extends
+    DaemonAction<ImagePixel, EnvironmentForImageThresholding> {
 
   public RandomizeHive() {
     super(DaemonActionType.INITIAL_CONFIGURATION);

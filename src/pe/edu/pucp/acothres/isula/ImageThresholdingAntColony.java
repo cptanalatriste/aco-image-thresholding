@@ -2,13 +2,13 @@ package pe.edu.pucp.acothres.isula;
 
 import isula.aco.Ant;
 import isula.aco.AntColony;
-import isula.aco.Environment;
 import isula.image.util.ImageFileHelper;
 import isula.image.util.ImagePixel;
 
 import java.util.logging.Logger;
 
-public class ImageThresholdingAntColony extends AntColony<ImagePixel> {
+public class ImageThresholdingAntColony extends
+    AntColony<ImagePixel, EnvironmentForImageThresholding> {
 
   private static Logger logger = Logger
       .getLogger(ImageThresholdingAntColony.class.getName());
@@ -19,7 +19,7 @@ public class ImageThresholdingAntColony extends AntColony<ImagePixel> {
   }
 
   @Override
-  public void buildColony(Environment environment) {
+  public void buildColony(EnvironmentForImageThresholding environment) {
     int antCounter = 0;
     double[][] problemGraph = environment.getProblemGraph();
 
@@ -27,7 +27,8 @@ public class ImageThresholdingAntColony extends AntColony<ImagePixel> {
       for (int j = 0; j < problemGraph[0].length; j++) {
 
         if (problemGraph[i][j] != ImageFileHelper.ABSENT_PIXEL_FLAG) {
-          Ant<ImagePixel> ant = this.createAnt(environment);
+          Ant<ImagePixel, EnvironmentForImageThresholding> ant = this
+              .createAnt(environment);
           ant.getSolution()[0] = new ImagePixel(i, j,
               environment.getProblemGraph());
           this.getHive().add(ant);
@@ -41,16 +42,16 @@ public class ImageThresholdingAntColony extends AntColony<ImagePixel> {
   }
 
   @Override
-  protected Ant<ImagePixel> createAnt(Environment environment) {
-    EnvironmentForImageThresholding env = (EnvironmentForImageThresholding) environment;
-    return new AntForImageThresholding(env.getNumberOfSteps());
+  protected Ant<ImagePixel, EnvironmentForImageThresholding> createAnt(
+      EnvironmentForImageThresholding environment) {
+    return new AntForImageThresholding(environment.getNumberOfSteps());
   }
 
   @Override
   public void clearAntSolutions() {
     logger.info("CLEARING ANT SOLUTIONS");
 
-    for (Ant<ImagePixel> ant : getHive()) {
+    for (Ant<ImagePixel, EnvironmentForImageThresholding> ant : getHive()) {
       ImagePixel initialPixel = ant.getSolution()[0];
       ant.clear();
       ant.setCurrentIndex(0);

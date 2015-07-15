@@ -94,7 +94,8 @@ public class AcoImageThresholding {
     // TODO(cgavidia): We need to find a way to force to implement this types.
     // Maybe as constructor arguments.
     ConfigurationProvider configurationProvider = new ProblemConfiguration();
-    AcoProblemSolver<ImagePixel> problemSolver = new AcoProblemSolver<ImagePixel>();
+    AcoProblemSolver<ImagePixel, EnvironmentForImageThresholding> problemSolver = 
+        new AcoProblemSolver<ImagePixel, EnvironmentForImageThresholding>();
 
     EnvironmentForImageThresholding environment = new EnvironmentForImageThresholding(
         imageGraph, ProblemConfiguration.NUMBER_OF_STEPS);
@@ -106,8 +107,11 @@ public class AcoImageThresholding {
     problemSolver.setEnvironment(environment);
     problemSolver.setAntColony(antColony);
 
-    problemSolver.addDaemonActions(new StartPheromoneMatrix<ImagePixel>(),
-        new RandomizeHive(), new PerformEvaporation<ImagePixel>());
+    problemSolver
+        .addDaemonActions(
+            new StartPheromoneMatrix<ImagePixel, EnvironmentForImageThresholding>(),
+            new RandomizeHive(),
+            new PerformEvaporation<ImagePixel, EnvironmentForImageThresholding>());
     antColony.addAntPolicies(new NodeSelectionForImageThresholding(),
         new OnlinePheromoneUpdateForThresholding());
 
