@@ -10,9 +10,9 @@ public class ProblemConfiguration implements ConfigurationProvider,
   // https://www.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300/html/dataset/images/gray/296059.html
   // http://brainweb.bic.mni.mcgill.ca/brainweb/anatomic_normal_20.html
   public static final String INPUT_DIRECTORY = 
-      "C:/Users/V144615/Documents/GitHub/ACOImageThresholdingWithIsula/inputImg/";
+      "C:/Users/CarlosG/Documents/GitHub/ACOImageThresholdingWithIsula/inputImg/";
   public static final String OUTPUT_DIRECTORY = 
-      "C:/Users/V144615/Documents/GitHub/ACOImageThresholdingWithIsula/outputImg/";
+      "C:/Users/CarlosG/Documents/GitHub/ACOImageThresholdingWithIsula/outputImg/";
 
   public static final String IMAGE_FILE = "19952transverse2_64.gif";
   public static final String OUTPUT_IMAGE_FILE = "output.bmp";
