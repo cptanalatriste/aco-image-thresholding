@@ -54,7 +54,6 @@ public class ImageThresholdingAntColony extends
     for (Ant<ImagePixel, EnvironmentForImageThresholding> ant : getHive()) {
       ImagePixel initialPixel = ant.getSolution()[0];
       ant.clear();
-      ant.setCurrentIndex(0);
       ant.visitNode(initialPixel);
     }
   }
