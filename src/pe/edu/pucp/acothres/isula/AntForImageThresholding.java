@@ -31,7 +31,7 @@ public class AntForImageThresholding extends
   public Double getHeuristicValue(ImagePixel solutionComponent,
       Integer positionInSolution, EnvironmentForImageThresholding environment) {
     double heuristicValue = 1 / Math.abs(solutionComponent.getGreyScaleValue()
-        - getSolutionQuality(environment) + DELTA);
+        - getSolutionCost(environment) + DELTA);
     return heuristicValue;
   }
 
@@ -53,7 +53,7 @@ public class AntForImageThresholding extends
   }
 
   @Override
-  public double getSolutionQuality(EnvironmentForImageThresholding environment) {
+  public double getSolutionCost(EnvironmentForImageThresholding environment) {
     double grayScaleSum = 0.0;
     for (int i = 0; i < this.getCurrentIndex(); i++) {
       ImagePixel currentPixel = getSolution()[i];

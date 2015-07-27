@@ -18,7 +18,7 @@ public class OnlinePheromoneUpdateForThresholding extends
     double contribution = 1 
         / (ProblemConfiguration.COST_FUNCTION_PARAMETER_A 
             + ProblemConfiguration.COST_FUNCTION_PARAMETER_B
-        * ant.getSolutionQuality(environment));
+        * ant.getSolutionCost(environment));
 
     double newValue = ant.getPheromoneTrailValue(solutionComponent,
         ant.getCurrentIndex(), environment)
