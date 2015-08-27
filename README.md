@@ -45,6 +45,13 @@ The program identified this areas as corresponding to the skull and fat (grey) a
 
 ![Segments](https://raw.githubusercontent.com/cptanalatriste/aco-image-thresholding/master/outputImg/with_open_process.bmp)
 
+How to use this code
+--------------------
+The code uploaded to this GitHub Repository corresponds to a Java Project developed on the Eclipse IDE. You should be able to import it as an existing project to your current workspace.
+
+**This project depends on the Isula Framework**.  You need to download first the Isula Framework Project available on this Github Repository: https://github.com/cptanalatriste/isula
+
+
 More about Isula
 ----------------
 Visit the Isula Framework site: http://cptanalatriste.github.io/isula/
