@@ -51,6 +51,8 @@ The code uploaded to this GitHub Repository corresponds to a Java Project develo
 
 **This project depends on the Isula Framework**.  You need to download first the Isula Framework Project available on this Github Repository: https://github.com/cptanalatriste/isula
 
+Keep in mind that several file and folder locations were configured on the `ProblemConfiguration.java` file. You need to set values according to your environment in order to avoid a `FileNotFoundException`. 
+
 
 More about Isula
 ----------------
