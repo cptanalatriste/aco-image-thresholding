@@ -10,6 +10,7 @@ public class OnlinePheromoneUpdateForThresholding extends
 
   @Override
   protected double getNewPheromoneValue(ImagePixel solutionComponent,
+	  Integer positionInSolution,
       EnvironmentForImageThresholding environment,
       ConfigurationProvider configurationProvider) {
 
