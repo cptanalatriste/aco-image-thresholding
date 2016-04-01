@@ -1,6 +1,6 @@
 package pe.edu.pucp.acothres.isula;
 
-import isula.aco.algorithms.acs.AcsConfigurationProvider;
+import isula.aco.ConfigurationProvider;
 import isula.aco.algorithms.acs.PseudoRandomNodeSelection;
 import isula.image.util.ImagePixel;
 
@@ -16,7 +16,7 @@ public class NodeSelectionForImageThresholding extends
   @Override
   protected HashMap<ImagePixel, Double> doIfNoComponentsFound(
       EnvironmentForImageThresholding environment,
-      AcsConfigurationProvider configurationProvider) {
+      ConfigurationProvider configurationProvider) {
     List<ImagePixel> neighbours = getAnt().getNeighbourhood(environment);
     ImagePixel imagePixel = neighbours.get(new Random().nextInt(neighbours
         .size()));

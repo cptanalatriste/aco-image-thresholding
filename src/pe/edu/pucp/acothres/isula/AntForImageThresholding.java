@@ -45,7 +45,7 @@ public class AntForImageThresholding extends
   }
 
   @Override
-  public void setPheromoneTrailValue(ImagePixel solutionComponent,
+  public void setPheromoneTrailValue(ImagePixel solutionComponent, Integer positionInSolution,
       EnvironmentForImageThresholding environment, Double value) {
     double[][] pheromoneMatrix = environment.getPheromoneMatrix();
     pheromoneMatrix[solutionComponent.getxCoordinate()][solutionComponent
