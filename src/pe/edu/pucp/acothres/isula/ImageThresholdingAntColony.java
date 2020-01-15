@@ -21,7 +21,7 @@ public class ImageThresholdingAntColony extends
   @Override
   public void buildColony(EnvironmentForImageThresholding environment) {
     int antCounter = 0;
-    double[][] problemGraph = environment.getProblemGraph();
+    double[][] problemGraph = environment.getProblemRepresentation();
 
     for (int i = 0; i < problemGraph.length; i++) {
       for (int j = 0; j < problemGraph[0].length; j++) {
@@ -30,7 +30,7 @@ public class ImageThresholdingAntColony extends
           Ant<ImagePixel, EnvironmentForImageThresholding> ant = this
               .createAnt(environment);
           ant.getSolution()[0] = new ImagePixel(i, j,
-              environment.getProblemGraph());
+              environment.getProblemRepresentation());
           this.getHive().add(ant);
 
           antCounter += 1;

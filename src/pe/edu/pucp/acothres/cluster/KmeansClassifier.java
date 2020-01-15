@@ -139,14 +139,14 @@ public class KmeansClassifier {
     int absentPixelCounter = 0;
     for (int i = 0; i < environment.getNumberOfRows(); i++) {
       for (int j = 0; j < environment.getNumberOfColumns(); j++) {
-        if (environment.getProblemGraph()[i][j] != ImageFileHelper.ABSENT_PIXEL_FLAG) {
+        if (environment.getProblemRepresentation()[i][j] != ImageFileHelper.ABSENT_PIXEL_FLAG) {
           Instance instance = new Instance(atributes.size());
 
           instance.setValue(0, normalizedPheromoneMatrix[i][j]);
-          instance.setValue(1, environment.getProblemGraph()[i][j]);
+          instance.setValue(1, environment.getProblemRepresentation()[i][j]);
           instances.add(instance);
           pixelPositions
-              .add(new ImagePixel(i, j, environment.getProblemGraph()));
+              .add(new ImagePixel(i, j, environment.getProblemRepresentation()));
         } else {
           absentPixelCounter++;
         }

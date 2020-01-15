@@ -20,7 +20,7 @@ public class EnvironmentForImageThresholding extends Environment {
 
   @Override
   protected double[][] createPheromoneMatrix() {
-    double[][] problemGraph = this.getProblemGraph();
+    double[][] problemGraph = this.getProblemRepresentation();
     return new double[problemGraph.length][problemGraph[0].length];
   }
 
@@ -29,11 +29,11 @@ public class EnvironmentForImageThresholding extends Environment {
   }
 
   public int getNumberOfRows() {
-    return getProblemGraph().length;
+    return getProblemRepresentation().length;
   }
 
   public int getNumberOfColumns() {
-    return getProblemGraph()[0].length;
+    return getProblemRepresentation()[0].length;
   }
 
   /**

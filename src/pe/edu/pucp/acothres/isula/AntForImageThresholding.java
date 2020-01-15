@@ -24,7 +24,7 @@ public class AntForImageThresholding extends
   public List<ImagePixel> getNeighbourhood(
       EnvironmentForImageThresholding environment) {
     ImagePixel currentPosition = this.getSolution()[this.getCurrentIndex() - 1];
-    return currentPosition.getNeighbourhood(environment.getProblemGraph());
+    return currentPosition.getNeighbourhood(environment.getProblemRepresentation());
   }
 
   @Override
