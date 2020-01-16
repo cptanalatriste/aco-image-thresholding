@@ -43,7 +43,7 @@ We use an MR Brain image as an input. This was provided by the BrainWeb Database
 
 The program identified this areas as corresponding to the skull and fat (grey) and the cerebrum (white):
 
-![Segments](https://raw.githubusercontent.com/cptanalatriste/aco-image-thresholding/master/outputImg/with_open_process.bmp)
+![Segments](https://raw.githubusercontent.com/cptanalatriste/aco-image-thresholding/master/with_open_process.bmp)
 
 How to use this code
 --------------------
