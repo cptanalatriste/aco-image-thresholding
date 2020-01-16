@@ -39,7 +39,7 @@ The results
 -----------
 We use an MR Brain image as an input. This was provided by the BrainWeb Database: http://brainweb.bic.mni.mcgill.ca/brainweb/
 
-![Original Image](https://raw.githubusercontent.com/cptanalatriste/aco-image-thresholding/master/inputImg/19952transverse2_64.gif)
+![Original Image](https://github.com/cptanalatriste/aco-image-thresholding/blob/master/src/inputImg/19952transverse2_64.gif?raw=true)
 
 The program identified this areas as corresponding to the skull and fat (grey) and the cerebrum (white):
 
