@@ -15,6 +15,7 @@ import pe.edu.pucp.acothres.isula.NodeSelectionForImageThresholding;
 import pe.edu.pucp.acothres.isula.OnlinePheromoneUpdateForThresholding;
 import pe.edu.pucp.acothres.isula.RandomizeHive;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -22,142 +23,141 @@ import javax.naming.ConfigurationException;
 
 public class AcoImageThresholding {
 
-  private static Logger logger = Logger.getLogger(AcoImageThresholding.class
-      .getName());
+    private static Logger logger = Logger.getLogger(AcoImageThresholding.class
+            .getName());
 
-  /**
-   * Starts the Image Thresholding process.
-   * 
-   * @param args
-   *          Program arguments.
-   */
-  public static void main(String[] args) {
-    try {
-      String imageFile = ProblemConfiguration.INPUT_DIRECTORY
-          + ProblemConfiguration.IMAGE_FILE;
-      AcoImageThresholding.getSegmentedImageAsArray(imageFile, true);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+    /**
+     * Starts the Image Thresholding process.
+     *
+     * @param args Program arguments.
+     */
+    public static void main(String[] args) {
+        try {
+            String fileName = ProblemConfiguration.INPUT_DIRECTORY
+                    + ProblemConfiguration.IMAGE_FILE;
+            File imageFile = new File(ImageFileHelper.class.getClassLoader().getResource(fileName).getFile());
 
-  /**
-   * Returns an image in segments, represented as an array of Integers.
-   * 
-   * @param imageFile
-   *          Image file location.
-   * @param generateOutputFiles
-   *          True to generate output files.
-   * @return Segmented image as an array.
-   * @throws Exception
-   *           IOException migh be thrown.
-   */
-  public static int[][] getSegmentedImageAsArray(String imageFile,
-      boolean generateOutputFiles) throws Exception {
-    logger.info("ACO FOR IMAGE THRESHOLDING");
-    logger.info("Data file: " + imageFile);
-
-    double[][] imageGraph = getImageGraph(imageFile);
-
-    EnvironmentForImageThresholding environment = applySegmentationWithIsula(imageGraph);
-
-    logger.info("Starting K-means clustering");
-
-    KmeansClassifier classifier = new KmeansClassifier(environment,
-        ProblemConfiguration.NUMBER_OF_CLUSTERS);
-
-    int[][] segmentedImageAsMatrix = applyPostProcessingSteps(classifier);
-
-    if (generateOutputFiles) {
-      logger.info("Generating segmented image");
-      ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
-          ProblemConfiguration.OUTPUT_DIRECTORY
-              + ProblemConfiguration.OUTPUT_IMAGE_FILE);
-
-      logger.info("Generating images per cluster");
-      for (int i = 0; i < classifier.getNumberOfClusters(); i++) {
-        ImageFileHelper.generateImageFromArray(
-            classifier.generateSegmentedImagePerCluster(i),
-            ProblemConfiguration.OUTPUT_DIRECTORY + i + "_"
-                + ProblemConfiguration.CLUSTER_IMAGE_FILE);
-      }
-    }
-    return segmentedImageAsMatrix;
-
-  }
-
-  @SuppressWarnings("unchecked")
-  private static EnvironmentForImageThresholding applySegmentationWithIsula(
-      double[][] imageGraph) throws InvalidInputException,
-      ConfigurationException {
-
-    // TODO(cgavidia): We need to find a way to force to implement this types.
-    // Maybe as constructor arguments.
-    ConfigurationProvider configurationProvider = new ProblemConfiguration();
-    AcoProblemSolver<ImagePixel, EnvironmentForImageThresholding> problemSolver = 
-        new AcoProblemSolver<ImagePixel, EnvironmentForImageThresholding>();
-
-    EnvironmentForImageThresholding environment = new EnvironmentForImageThresholding(
-        imageGraph, ProblemConfiguration.NUMBER_OF_STEPS);
-
-    ImageThresholdingAntColony antColony = new ImageThresholdingAntColony();
-    antColony.buildColony(environment);
-
-    problemSolver.setConfigurationProvider(configurationProvider);
-    problemSolver.setEnvironment(environment);
-    problemSolver.setAntColony(antColony);
-
-    problemSolver
-        .addDaemonActions(
-            new StartPheromoneMatrix<ImagePixel, EnvironmentForImageThresholding>(),
-            new RandomizeHive(),
-            new PerformEvaporation<ImagePixel, EnvironmentForImageThresholding>());
-    antColony.addAntPolicies(new NodeSelectionForImageThresholding(),
-        new OnlinePheromoneUpdateForThresholding());
-
-    problemSolver.solveProblem();
-    return environment;
-  }
-
-  private static int[][] applyPostProcessingSteps(KmeansClassifier classifier)
-      throws Exception {
-
-    int[][] segmentedImageAsMatrix = classifier.generateSegmentedImage();
-
-    // Only for demonstration purposes
-    ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
-        ProblemConfiguration.OUTPUT_DIRECTORY + "without_open_process.bmp");
-
-    segmentedImageAsMatrix = ImageFileHelper.openImage(segmentedImageAsMatrix,
-        ProblemConfiguration.OPENING_REPETITION_PARAMETER);
-
-    // Only for demonstration purposes
-    ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
-        ProblemConfiguration.OUTPUT_DIRECTORY + "with_open_process.bmp");
-
-    return segmentedImageAsMatrix;
-  }
-
-  private static double[][] getImageGraph(String imageFile) throws IOException {
-    int[][] imageGraphAsInt = ImageFileHelper.getImageArrayFromFile(imageFile);
-
-    logger.info("Generating original image from matrix");
-    ImageFileHelper.generateImageFromArray(imageGraphAsInt,
-        ProblemConfiguration.OUTPUT_DIRECTORY
-            + ProblemConfiguration.ORIGINAL_IMAGE_FILE);
-    logger.info("Starting background filtering process");
-    imageGraphAsInt = ImageFileHelper.removeBackgroundPixels(imageGraphAsInt);
-
-    // TODO(cgavidia): Simple hack to support the type. It should be a generic
-    // instead.
-    double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
-    for (int i = 0; i < imageGraphAsInt.length; i++) {
-      for (int j = 0; j < imageGraphAsInt[0].length; j++) {
-        imageGraph[i][j] = imageGraphAsInt[i][j];
-      }
+            AcoImageThresholding.getSegmentedImageAsArray(imageFile, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    return imageGraph;
-  }
+    /**
+     * Returns an image in segments, represented as an array of Integers.
+     *
+     * @param imageFile           Image file location.
+     * @param generateOutputFiles True to generate output files.
+     * @return Segmented image as an array.
+     * @throws Exception IOException migh be thrown.
+     */
+    public static int[][] getSegmentedImageAsArray(File imageFile,
+                                                   boolean generateOutputFiles) throws Exception {
+        logger.info("ACO FOR IMAGE THRESHOLDING");
+        logger.info("Data file: " + imageFile);
+
+        double[][] imageGraph = getImageGraph(imageFile);
+
+        EnvironmentForImageThresholding environment = applySegmentationWithIsula(imageGraph);
+
+        logger.info("Starting K-means clustering");
+
+        KmeansClassifier classifier = new KmeansClassifier(environment,
+                ProblemConfiguration.NUMBER_OF_CLUSTERS);
+
+        int[][] segmentedImageAsMatrix = applyPostProcessingSteps(classifier);
+
+        if (generateOutputFiles) {
+            logger.info("Generating segmented image");
+            ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
+                    ProblemConfiguration.OUTPUT_DIRECTORY
+                            + ProblemConfiguration.OUTPUT_IMAGE_FILE);
+
+            logger.info("Generating images per cluster");
+            for (int i = 0; i < classifier.getNumberOfClusters(); i++) {
+                ImageFileHelper.generateImageFromArray(
+                        classifier.generateSegmentedImagePerCluster(i),
+                        ProblemConfiguration.OUTPUT_DIRECTORY + i + "_"
+                                + ProblemConfiguration.CLUSTER_IMAGE_FILE);
+            }
+        }
+        return segmentedImageAsMatrix;
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private static EnvironmentForImageThresholding applySegmentationWithIsula(
+            double[][] imageGraph) throws InvalidInputException,
+            ConfigurationException {
+
+        // TODO(cgavidia): We need to find a way to force to implement this types.
+        // Maybe as constructor arguments.
+        ConfigurationProvider configurationProvider = new ProblemConfiguration();
+        AcoProblemSolver<ImagePixel, EnvironmentForImageThresholding> problemSolver =
+                new AcoProblemSolver<ImagePixel, EnvironmentForImageThresholding>();
+
+        EnvironmentForImageThresholding environment = new EnvironmentForImageThresholding(
+                imageGraph, ProblemConfiguration.NUMBER_OF_STEPS);
+
+        ImageThresholdingAntColony antColony = new ImageThresholdingAntColony();
+        antColony.buildColony(environment);
+
+        problemSolver.setConfigurationProvider(configurationProvider);
+        problemSolver.setEnvironment(environment);
+        problemSolver.setAntColony(antColony);
+
+        problemSolver
+                .addDaemonActions(
+                        new StartPheromoneMatrix<ImagePixel, EnvironmentForImageThresholding>(),
+                        new RandomizeHive(),
+                        new PerformEvaporation<ImagePixel, EnvironmentForImageThresholding>());
+        antColony.addAntPolicies(new NodeSelectionForImageThresholding(),
+                new OnlinePheromoneUpdateForThresholding());
+
+        problemSolver.solveProblem();
+        return environment;
+    }
+
+    private static int[][] applyPostProcessingSteps(KmeansClassifier classifier)
+            throws Exception {
+
+        int[][] segmentedImageAsMatrix = classifier.generateSegmentedImage();
+
+        // Only for demonstration purposes
+        ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
+                ProblemConfiguration.OUTPUT_DIRECTORY + "without_open_process.bmp");
+
+        segmentedImageAsMatrix = ImageFileHelper.openImage(segmentedImageAsMatrix,
+                ProblemConfiguration.OPENING_REPETITION_PARAMETER);
+
+        // Only for demonstration purposes
+        ImageFileHelper.generateImageFromArray(segmentedImageAsMatrix,
+                ProblemConfiguration.OUTPUT_DIRECTORY + "with_open_process.bmp");
+
+        return segmentedImageAsMatrix;
+    }
+
+    private static double[][] getImageGraph(File imageFile) throws IOException {
+
+        int[][] imageGraphAsInt = ImageFileHelper.getImageArrayFromFile(imageFile);
+
+        logger.info("Generating original image from matrix");
+        ImageFileHelper.generateImageFromArray(imageGraphAsInt,
+                ProblemConfiguration.OUTPUT_DIRECTORY
+                        + ProblemConfiguration.ORIGINAL_IMAGE_FILE);
+        logger.info("Starting background filtering process");
+        imageGraphAsInt = ImageFileHelper.removeBackgroundPixels(imageGraphAsInt);
+
+        // TODO(cgavidia): Simple hack to support the type. It should be a generic
+        // instead.
+        double[][] imageGraph = new double[imageGraphAsInt.length][imageGraphAsInt[0].length];
+        for (int i = 0; i < imageGraphAsInt.length; i++) {
+            for (int j = 0; j < imageGraphAsInt[0].length; j++) {
+                imageGraph[i][j] = imageGraphAsInt[i][j];
+            }
+        }
+
+        return imageGraph;
+    }
 
 }
