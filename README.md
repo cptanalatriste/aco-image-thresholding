@@ -1,4 +1,7 @@
 # aco-image-thresholding
+
+[![Build Status](https://travis-ci.org/cptanalatriste/aco-image-thresholding.svg?branch=master)](https://travis-ci.org/cptanalatriste/aco-image-thresholding)
+
 A Java Program that applies a binary thresholding procedure to a MR Brain image. The proposed procedure includes simple thresholding to remove the background, an Ant Colony Algorithm to separate foreground from background and mathematical morphology to improve the produced segments.
 
 The Ant-Colony Algorithm
@@ -49,7 +52,7 @@ How to use this code
 --------------------
 The code uploaded to this GitHub Repository corresponds to a Maven Java Project. As such, it is strongly recommended that you have Maven installed before working with it.
 
-**This project depends on the Isula Framework**.  You need to download first the Isula Framework Project available on this Github Repository: https://github.com/cptanalatriste/isula
+**This project depends on the Isula Framework**.  It is available at this Github Repository: https://github.com/cptanalatriste/isula
 
 Keep in mind that several file and folder locations were configured on the `ProblemConfiguration.java` file. You need to set values according to your environment in order to avoid a `FileNotFoundException`. 
 Once this is ready, you can launch this project by executing `mvn exec:java -Dexec.mainClass="pe.edu.pucp.acothres.AcoImageThresholding"` from the project root folder.
