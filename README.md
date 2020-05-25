@@ -1,6 +1,7 @@
 # aco-image-thresholding
 
 [![Build Status](https://travis-ci.org/cptanalatriste/aco-image-thresholding.svg?branch=master)](https://travis-ci.org/cptanalatriste/aco-image-thresholding)
+[![Build Status](https://img.shields.io/badge/java-packagecloud.io-844fec.svg)](https://packagecloud.io/cgavidia/aco-image-thresholding)
 
 A Java Program that applies a binary thresholding procedure to a MR Brain image. The proposed procedure includes simple thresholding to remove the background, an Ant Colony Algorithm to separate foreground from background and mathematical morphology to improve the produced segments.
 
